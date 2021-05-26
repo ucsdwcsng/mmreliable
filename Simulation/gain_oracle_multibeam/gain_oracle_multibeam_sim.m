@@ -1,70 +1,80 @@
-% plot_cdf_SNR_gain_many_channel
-
-% Dependence
-% get_multibeam_weights.m
-% get_null_multibeam_weights.m
-% get_SNR_from_beam_and_channel.m
-
-% Note for raghav - this is montecarlo of oracle vs multibeam snr gain
-
-% Ish Jain
-% Dec 1 2020
-% Randomly vary channel parameters and plot how much SNR gains we get
-% compared to single-beam. We also compare against the oracle solution and
-% show how multi-beam reaches the oracle solution when the number of beams
-% in multi-beam reaches close to number of channel paths
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gain_oracle_multibeam_sim.m
+% Author: Ish Jain
+% Date Created: Dec 1 2020
+% Description: In this script, we randomly vary the wireless channel
+% characteristics and compute the SNR gain of multi-beam over a single-beam
+% solution. We also compare the SNR gain of multi-beam vs the gain provided
+% by using a Maximal Ratio Combining based Oracle solution.
+% %-------------------
+% Outcome: A CDF of SNR gain over single beam across all the runs with
+% random channel realizations. When the number of beams used in the
+% multi-beam is close to number of paths in the channel, it performs very
+% similar to the oracle solution. The multi-beam always performs better, or
+% at the same level as a single beam.
+% %-------------------
+% This simulation assumes that the Angles of Departure (AoD) of the
+% constituent beams are known exactly in advance through beam training
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars
-%%-- randomized channel parameters
+close all
+plot_flag = 0;
+
+%% Parameters
 h.nPaths = 3; % Number of channel paths
 Numiter = 100; % Number of iterations
-Numbeams = 2; % Number of beams in multi-beam (Numbeams<=h.nPaths)
+Numbeams = 2; % Number of beams in multi-beam
+assert(Numbeams<=h.nPaths,"Numbeams should be <= h.nPaths")
+NumAnt = 8; % Number of antennas in the array
 Pt = 20; % normalized transmit power in dB
 rng(1);
 clear SNRgain_multi SNRgain_oracle
 count=0; %counting exceptional cases when SNR is too high
 
+
+%% MonteCarlo
 for iter = 1:Numiter
+    %--STEP 1: Randomly generate channel parameters
     h.AOD = round(unifrnd(-60, 60, h.nPaths,1)); %degree
     h.mag = [0; sort(unifrnd(-30,-3, h.nPaths-1,1), 'descend')]; %dB
     h.phase = [0; unifrnd(0,360, h.nPaths-1,1)]; %deg
-    
-    %%--Initial parameters
     h.magabs = db2mag(h.mag);
     h.complex = h.magabs.*exp(1j*deg2rad(h.phase));
     %---------------------------
     
-    % Parameters to vary and test
+    %--STEP 2: Compute Multi-Beam and Single Beam weights.
     beamAOD = h.AOD(1:Numbeams).'; 
     beamAmplitude = h.magabs(1:Numbeams).';
     beamPhase = -h.phase(1:Numbeams).'; 
+    [wsingle,bm] = get_multibeam_weights(beamAOD(1),1,0,NumAnt,0);
+    Bsingle=bm.B;
+    [wmulti, bm2] = get_multibeam_weights(beamAOD,beamAmplitude,beamPhase,NumAnt,0);
+    Bmulti=bm2.B; theta=bm2.theta;
     %---------------------------
     
-    [wsingle,bm] = get_multibeam_weights(beamAOD(1),1,0,0);
-    Bsingle=bm.B;
-    [wmulti, bm2] = get_multibeam_weights(beamAOD,beamAmplitude,beamPhase,0);
-    Bmulti=bm2.B;
-    theta=bm2.theta;
-    for n=1:8 % assume 8 antennas
+    %--STEP 3: Compute Oracle weights based on Maximal Ratio Combining
+    for n=1:NumAnt % assume 8 antennas
         h_all_antenna(n,1) = sum(h.complex.*exp(1j*pi*(n-1)*sind(h.AOD)));
     end
     w_oracle_unnorm = conj(h_all_antenna);
     woracle = w_oracle_unnorm/norm(w_oracle_unnorm);
     Boracle = get_beam_pattern_from_weights(woracle);
+    %---------------------------
     
+    %--STEP 4: Compute Absolute SNR and SNR gain over single-beam
     SNR_multi(iter) = get_SNR_from_beam_and_channel(h, Bmulti, theta, Pt);
     SNR_single(iter) = get_SNR_from_beam_and_channel(h, Bsingle, theta, Pt);
     SNR_oracle(iter) = get_SNR_from_beam_and_channel(h, Boracle, theta, Pt);
     
-    
     SNRgain_multi(iter) = SNR_multi(iter)-SNR_single(iter);
     SNRgain_oracle(iter) = SNR_oracle(iter)-SNR_single(iter);
+    %---------------------------
     
 end
 
 
 %% Plotting
-figure(125);clf;
+fig1han = figure(125);clf;
 
 g=cdfplot(SNRgain_oracle);
 hold on; grid on;
@@ -78,7 +88,7 @@ ylabel('CDF')
 title(sprintf('Simulation: Num iter=%d, numpaths=%d', Numiter, h.nPaths))
 set(l,'fontsize', 12)
 
-figure(126); clf;
+fig2han = figure(126); clf;
 snr = [SNR_oracle.', SNR_multi.', SNR_single.'];
 rss_mean = mean(snr,1);
 rss_std = std(snr,1);
@@ -95,9 +105,7 @@ set(gca, 'fontsize',12);
 % set(findall(gca, 'Type', 'Line'),'LineWidth',2);
 set(gcf,'PaperUnits', 'inches', 'paperposition', [0 0 6 4]) % Use 6,4 or 6,3 or 6,5 judiciously depending on space in the paper (2fig/column or 1fig/column)
 
-
-
-wannasave=0;
-if(wannasave)
-    saveas(gcf, sprintf('figures/plot_cdf_SNR_gain_many_channel_numpath=%d.png', h.nPaths))
+if(plot_flag)
+    saveas(fig1han, sprintf('figures/cdf_multibeam_oracle_singlebeam_snrimprove_=%d.png', h.nPaths))
+    saveas(fig2han, sprintf('figures/multibeam_oracle_singlebeam_snrimprove_=%d.png', h.nPaths))
 end
