@@ -45,7 +45,7 @@ Software Requirements:
 * Windows, Linux or MacOS
 * **MATLAB 2019a or newer** (no paid libraries required)
 
-## Run Simulations (30 human-minutes, 10 computer-minutes)
+## Run Simulations (50 human-minutes, 10 computer-minutes)
 
 ### 1: Multi-beam weight creation (5 minutes)
 * Run `./Simulation/Multibeam_weight_creation/plot_multibeam_pattern.m` to create multi-beam patterns from a given set of component beams.
@@ -71,6 +71,6 @@ Software Requirements:
 * Run `./Simulation/sensitivity_to_phase_amplitude/plot2D_SNR_with_perbeam_phase_and_power.m` to understand the sensitivity of multi-beam SNR gain in the presence of parameter estimation errors.
 - This generates the plot from Appendix B in the figures subfolder
 
-### 5: Overhead analysis of mmReliable in context of 5G-NR
+### 5: Overhead analysis of mmReliable in context of 5G-NR (5 minutes)
 * Run `./Simulation/probing_overhead/probing_overhead.m`. It uses parameters from the 5G-NR standard to compute the channel probing overhead
 - Generates Figure 15
