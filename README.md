@@ -45,6 +45,9 @@ Software Requirements:
 * Windows, Linux or MacOS
 * **MATLAB 2019a or newer** (no paid libraries required)
 
+Setup code:
+* Run ```./startup_script.m ``` to add the lib functions in Matlab path.
+
 ## Run Simulations (50 human-minutes, 10 computer-minutes)
 
 ### 1: Multi-beam weight creation (5 minutes)
