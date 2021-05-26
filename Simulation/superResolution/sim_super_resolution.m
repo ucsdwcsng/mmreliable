@@ -1,6 +1,9 @@
 %%--Simulation to verify super resolution algorithm
-clear
+clearvars
 close all
+
+%for raghav: this is a single implementation of superresolution code
+% 
 
 % steps:
 % 1. create wireless channel using two paths and their sinc interpolation

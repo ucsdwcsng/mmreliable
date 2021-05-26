@@ -1,5 +1,6 @@
 % probing_overhead.m
 
+% Note for Raghav: Put TS38.xx?
 Nlist = [8, 16, 32, 64, 128, 256];
 ssb = 0.5; %ms
 csirs = 0.125; %ms

@@ -65,8 +65,7 @@ Bmulti = V.'*wmulti; %beampattern
 EIRP = max(db(Bmulti));
 
 % Calculate total radiated power TRP
-delta_theta_rad = deg2rad(theta(2)-theta(1));
-TRP= db(sum((abs(Bmulti).^2).*cosd(theta.')) * delta_theta_rad);
+TRP = norm(wmulti).^2;
 
 %%--return parameters
 bm.B = Bmulti;

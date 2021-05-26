@@ -1,8 +1,10 @@
 %%-resolutionAnalysis.m
 % Find out how much is the resolution of our super resolutuion
 
-clear
+clearvars
 % close all
+
+%for raghav: this monte carl of superresolution code
 
 % steps:
 % 1. How close two path can be resolved? A. 100% accurate without noise.
@@ -25,7 +27,7 @@ tauListRel = (0:.5:15)*1e-9; % relative tau in s
 h_complex = [.75*exp(1j*pi/4); 1*exp(1j*pi/2)]; %complex channel taps
 
 
-numiter = 100;
+numiter = 1000;
 for iter = 1:numiter
     %for each iter, add random noise for a given SNR and calculate MSEavg
     h_complex = randn(2,1)+1j*randn(2,1);
