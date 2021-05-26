@@ -21,7 +21,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars
 close all
-plot_flag = 0;
+plot_flag = 0; % Turn on to save figures as png images
 
 %% Parameters
 N_SC = 256; %number of subcarriers
@@ -89,5 +89,5 @@ set(ll,'location','best');
 set(gcf,'PaperUnits', 'inches', 'paperposition', [0 0 6 4])
 
 if(plot_flag)
-    saveas(gcf,'/figures/superresMSE.pdf')
+    saveas(gcf,fullfile('figures','superresolution_analysis.png'))
 end

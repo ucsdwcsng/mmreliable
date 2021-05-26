@@ -11,7 +11,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars
 close all
-
+plot_flag = 0; % Turn on to save figures as png images
 %% Parameters
 BW = 400e6; % Analog bandwidth (Hz)
 fs = 10*BW; % Sample rate (Hz)
@@ -58,4 +58,8 @@ ylim([-30,0])
 xlabel('time (ns)'); ylabel('Channel Impulse Response (CIR, dB)')
 set(gca,'fontsize',13)
 legend('path 1', 'path 2', 'mixed CIR')
+
+if(plot_flag)
+    saveas(gcf,fullfile('figures','sim_super_resolution.png'))
+end
 

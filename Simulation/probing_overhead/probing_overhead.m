@@ -35,6 +35,6 @@ set(gca, 'fontsize',16);
 set(gcf,'PaperUnits', 'inches', 'paperposition', [0 0 6 3]) % Use 6,4 or 6,3 or 6,5 judiciously depending on space in the paper (2fig/column or 1fig/column)
 
 if(plot_flag)
-    saveas(gcf,"/figures/probing_overhead.png") 
+    saveas(gcf,fullfile('figures','probing_overhead.png')) 
 end
 

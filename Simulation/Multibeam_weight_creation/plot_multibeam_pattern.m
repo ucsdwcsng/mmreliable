@@ -8,6 +8,9 @@
 % necesseary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+clearvars;
+plot_flag = 0; % Turn on to save figures as png images
+
 %% Beam Parameters
 % Beam Parameters are set to get multibeam weights that have same TRP as
 % single beam weights. The single beam direction is the first element of
@@ -44,5 +47,5 @@ sgtitle(sprintf('TRP (dB):: Single:%3.2f, Multi:%3.2f', 10*log10(bSingle.TRP), .
     10*log10(bMulti.TRP)))
 
 if(plot_flag)
-    saveas(gcf, sprintf('figures/plot_multibeam_pattern.png'))
+    saveas(gcf, sprintf(fullfile('figures','plot_multibeam_pattern.png')))
 end

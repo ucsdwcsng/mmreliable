@@ -18,7 +18,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars
 close all
-plot_flag = 0;
+plot_flag = 0; % Turn on to save figures as png images
 
 %% Parameters
 h.nPaths = 3; % Number of channel paths
@@ -106,6 +106,6 @@ set(gca, 'fontsize',12);
 set(gcf,'PaperUnits', 'inches', 'paperposition', [0 0 6 4]) % Use 6,4 or 6,3 or 6,5 judiciously depending on space in the paper (2fig/column or 1fig/column)
 
 if(plot_flag)
-    saveas(fig1han, sprintf('figures/cdf_multibeam_oracle_singlebeam_snrimprove_=%d.png', h.nPaths))
-    saveas(fig2han, sprintf('figures/multibeam_oracle_singlebeam_snrimprove_=%d.png', h.nPaths))
+    saveas(fig1han, sprintf(fullfile('figures','cdf_multibeam_oracle_singlebeam_snrimprove_=%d.png'), h.nPaths))
+    saveas(fig2han, sprintf(fullfile('figures','multibeam_oracle_singlebeam_snrimprove_=%d.png'), h.nPaths))
 end

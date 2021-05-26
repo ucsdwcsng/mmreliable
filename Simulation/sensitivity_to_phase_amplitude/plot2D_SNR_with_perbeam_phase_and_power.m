@@ -93,5 +93,5 @@ set(gcf,'PaperUnits', 'inches', 'paperposition', [0 0 6 2]); % Use 6,4 or 6,3 or
 title(["SNR Gain with errors.", "Lines represent ideal phase and magnitude"])
 
 if(plot_flag)
-    saveas(gcf,'/figures/plot2D_multibeam_SNR_with_perbeam_phase_and_power.pdf')
+    saveas(gcf,fullfile('figures','plot2D_multibeam_SNR_with_perbeam_phase_and_power.png'))
 end
